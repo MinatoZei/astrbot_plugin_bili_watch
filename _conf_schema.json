@@ -1,0 +1,108 @@
+{
+    "sessdata": {
+        "description": "SESSDATA",
+        "type": "string",
+        "hint": "B站 cookie SESSDATA 字段。可在浏览器登录 B 站后从 DevTools → Application → Cookies 查看。也可以用 /biliw_login 扫码登录。",
+        "obvious_hint": true
+    },
+    "proxy": {
+        "description": "代理",
+        "type": "string",
+        "hint": "Bilibili API 请求代理地址。示例: http://127.0.0.1:7890 或 socks5://127.0.0.1:1080,留空则直连。",
+        "default": ""
+    },
+    "interval_secs": {
+        "description": "动态检测周期(秒)",
+        "type": "int",
+        "hint": "单 UID 动态/直播任务的检测周期。",
+        "obvious_hint": true,
+        "default": 300
+    },
+    "task_gap_secs": {
+        "description": "相邻 UID 任务最小间隔(秒)",
+        "type": "int",
+        "hint": "动态/直播 调度时,相邻两个 UID 之间的最小间隔。",
+        "default": 20
+    },
+    "dynamic_limit": {
+        "description": "单次推送动态条数上限",
+        "type": "int",
+        "hint": "防止首次订阅时一次刷屏。",
+        "default": 5
+    },
+    "recent_dynamic_cache": {
+        "description": "动态去重缓存长度",
+        "type": "int",
+        "hint": "保留最近 N 个 dyn_id 用于去重。",
+        "default": 4
+    },
+    "forward_image_limit": {
+        "description": "转发动态原图推送数量上限",
+        "type": "int",
+        "hint": "默认 1 张。设 0 不发图,设 9 推全部原图。",
+        "default": 1
+    },
+    "enable_comment_watch": {
+        "description": "启用 UP主 评论区监控",
+        "type": "bool",
+        "hint": "扫描订阅 UP主 在自己动态/视频评论区的发言(含楼中楼)。",
+        "default": true,
+        "obvious_hint": true
+    },
+    "comment_interval_secs": {
+        "description": "评论检测周期(秒)",
+        "type": "int",
+        "hint": "比动态激进,默认 90。过低易触发风控。",
+        "default": 90
+    },
+    "comment_task_gap_secs": {
+        "description": "评论扫描相邻 UID 间隔(秒)",
+        "type": "int",
+        "default": 10
+    },
+    "comment_scope_recent_n": {
+        "description": "每次扫描覆盖最近 N 条动态/视频",
+        "type": "int",
+        "hint": "增大可覆盖更老的内容,但请求量线性增加。",
+        "default": 5
+    },
+    "comment_max_subreply_pages": {
+        "description": "楼中楼翻页上限",
+        "type": "int",
+        "hint": "每页 20 条,默认 2 = 40 条。极热评论可调到 5。",
+        "default": 2
+    },
+    "comment_dual_mode": {
+        "description": "评论双模式扫描(热度+时间倒序)",
+        "type": "bool",
+        "hint": "true:每条动态扫两次(热度 + 时间倒序),覆盖更全。",
+        "default": true
+    },
+    "comment_skip_unchanged": {
+        "description": "评论数没变化时跳过该动态扫描",
+        "type": "bool",
+        "hint": "通过对比 module_stat.comment.count 变化决定是否扫,可以让评论请求量降到 1/3~1/5。",
+        "default": true
+    },
+    "comment_max_interval_secs": {
+        "description": "自适应周期上限(秒)",
+        "type": "int",
+        "hint": "触发风控时周期会拉长,默认最高 300s = 5min。再大就跟动态周期一个量级,评论失去实时性。",
+        "default": 300
+    },
+    "comment_content_max_len": {
+        "description": "评论正文截断长度",
+        "type": "int",
+        "default": 150
+    },
+    "notified_rpids_limit": {
+        "description": "每个订阅的评论 rpid 缓存上限(FIFO)",
+        "type": "int",
+        "default": 200
+    },
+    "security_cooldown_secs": {
+        "description": "触发风控(-412/-352)后冷却时间(秒)",
+        "type": "int",
+        "default": 600
+    }
+}

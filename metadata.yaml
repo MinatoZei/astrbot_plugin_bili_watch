@@ -1,0 +1,11 @@
+name: astrbot_plugin_bili_watch
+desc: B站 UP主 动态/视频/直播 + 评论区(含楼中楼)监控推送插件
+help: "指令前缀 /biliw_,中文别名前缀'监控'。常用: /biliw_sub <uid>, /biliw_status"
+version: v0.4.1
+author: "based on Flartiny & Soulter"
+repo: https://github.com/your-name/astrbot_plugin_bili_watch
+display_name: B站监控+评论扫描
+support_platforms:
+  - aiocqhttp
+  - qq_official
+astrbot_version: ">=4.5.2"

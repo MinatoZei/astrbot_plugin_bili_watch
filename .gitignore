@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Editor
+.vscode/
+.idea/
+
+# Virtual env
+.venv/
+venv/
+
+# AstrBot 运行时数据(防意外提交带 SESSDATA 的 json)
+data/
+*.session
+*.cookie
+*sessdata*
+
+# Build / package output
+*.zip
+build/
+dist/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
