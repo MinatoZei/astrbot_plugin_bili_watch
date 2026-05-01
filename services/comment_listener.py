@@ -21,7 +21,8 @@ import traceback
 from typing import Any, Dict, List, Optional, Tuple
 
 from astrbot.api import logger
-from astrbot.api.event import MessageChain
+from astrbot.api.event import MessageEventResult
+from astrbot.api.message_components import Image, Plain
 from astrbot.api.star import Context
 
 from ..bili_client import BiliClient
@@ -389,6 +390,21 @@ class CommentListener:
                 await asyncio.sleep(0.5)
 
     # ============= 推送 =============
+    @staticmethod
+    def _extract_comment_image_urls(reply: Dict[str, Any]) -> List[str]:
+        content = reply.get("content") or {}
+        pictures = content.get("pictures") or []
+        if not isinstance(pictures, list):
+            return []
+        urls: List[str] = []
+        for picture in pictures:
+            if not isinstance(picture, dict):
+                continue
+            url = str(picture.get("img_src") or picture.get("url") or "").strip()
+            if url:
+                urls.append(url)
+        return urls
+
     async def _push(
         self,
         sub_user: str,
@@ -404,7 +420,8 @@ class CommentListener:
             up_name = (
                 (item.get("modules") or {}).get("module_author", {}).get("name") or str(up_uid)
             )
-            content = (reply.get("content") or {}).get("message", "") or ""
+            content_data = reply.get("content") or {}
+            content = content_data.get("message", "") or ""
             ctime_ts = int(reply.get("ctime") or 0)
             from datetime import datetime
             comment_time = (
@@ -438,8 +455,12 @@ class CommentListener:
                 f"🕒 {comment_time}\n"
                 f"🔗 {jump}"
             )
-            chain = MessageChain().message(text)
-            await self.context.send_message(sub_user, chain)
+            chain: List[Any] = [Plain(text)]
+            for image_url in self._extract_comment_image_urls(reply):
+                chain.append(Image.fromURL(image_url))
+            await self.context.send_message(
+                sub_user, MessageEventResult(chain=chain).use_t2i(False)
+            )
             logger.info(
                 f"[CommentListener] 推送 UP自评 sub_user={sub_user} dyn={dyn_id} rpid={rpid} L{level}"
             )
@@ -457,4 +478,3 @@ class CommentListener:
         if "请求过于频繁" in msg:
             return True
         return False
-

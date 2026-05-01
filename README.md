@@ -13,8 +13,9 @@
 | 💬 | UP主 在自己**动态/视频评论区**的发言 | `reply/main` (热度 + 时间双 mode) |
 | 💬💬 | UP主 在**楼中楼**里回复粉丝 | `reply/reply` 翻页 |
 | 🖼️ | 转发动态时附带的**原动态图片** | 解析 `item.orig.modules.module_dynamic.major.opus.pics` |
+| 🖼️ | UP主 评论 / 楼中楼回复里的图片 | 解析 `reply.content.pictures` |
 
-**纯文本+图片消息链推送**,不做卡片渲染(故意精简,跟原版 Soulter 插件最大的区别)。
+**纯文本+图片消息链推送**,不做卡片渲染(故意精简,跟原版 Soulter 插件最大的区别)。这里砍掉的是 HTML/T2I 卡片渲染,不是 B站 原图附件;转发动态原图、评论图片、楼中楼回复图片都会随消息链发送。
 
 群聊隔离:**天然支持** — 不同群/私聊订阅互不干扰,同一 UP 多人订阅 API 只拉一次。
 
@@ -133,7 +134,7 @@ git clone https://github.com/<your>/astrbot_plugin_bili_watch.git
 
 在此基础上本插件做了两件事:
 
-1. **精简**:砍掉了 Bangumi 番剧推荐 / 全站热门视频搜索 / BV 链接解析 / QQ 小程序解析 / HTML 卡片渲染 等非核心功能,只保留 UP主 订阅推送这个最常用场景。推送从图片渲染改成纯文本+原图消息链,不依赖 Playwright,体积和资源占用都更轻量。
+1. **精简**:砍掉了 Bangumi 番剧推荐 / 全站热门视频搜索 / BV 链接解析 / QQ 小程序解析 / HTML 卡片渲染 等非核心功能,只保留 UP主 订阅推送这个最常用场景。推送从卡片图片渲染改成纯文本+原图消息链,不依赖 Playwright,体积和资源占用都更轻量。
 2. **加上 UP主 评论区(含楼中楼)监控**:新增 `services/comment_listener.py`,定时扫描订阅 UP主 在自己动态/视频评论区的发言(含楼中楼里回复粉丝),识别后推送到对应群/私聊。这是原版 [astrbot_plugin_bilibili](https://github.com/Soulter/astrbot_plugin_bilibili) 没有的功能。评论扫描参考了 [Suyannnnnnnn/bilibili-notifier-new](https://github.com/Suyannnnnnnn/bilibili-notifier-new)(动态评论 `type=11` 与 `module_stat.comment.count` 增量检测)和 [Trevo1/bilibili_monitor](https://github.com/Trevo1/bilibili_monitor)(rpid 持久化去重 + 风控冷却)的思路。
 
 如果你只需要原版动态推送 + 卡片渲染,推荐直接用 [astrbot_plugin_bilibili](https://github.com/Soulter/astrbot_plugin_bilibili);只有需要"评论区监控"或"轻量纯文本"这两个场景才装本插件。
